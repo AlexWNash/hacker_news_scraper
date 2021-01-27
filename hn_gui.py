@@ -1,19 +1,29 @@
 from tkinter import *
 from scraper import news
+import webbrowser
+
+
+def callback(url):
+    webbrowser.open_new(url)
+
+fgcolor = 'grey'
+bgcolor = 'black'
 
 root = Tk()
 root.title("Hacker News Top Ten")
-text = Text(root, font=('Arial', 20), wrap="word")
+root.configure(background=bgcolor)
+i = 0
+font = ('Arial', 20)
 
 for article in news:
-    link = '{0} {1}'.format("Link:", article['link'])
-    title = '{0} {1}'.format("\nTitle:", article['title'])
-    votes = '{0} {1}'.format("\nVotes:", article['votes'])
-    text.insert(INSERT, link)
-    text.insert(INSERT, title)
-    text.insert(INSERT, votes)
-    text.insert(END, "\n\n")
-text.config(bg="black", fg="grey")
-text.pack(fill=BOTH, expand=1)
+    lbl = Label(root, text="Title: ", font=font, fg=fgcolor, bg=bgcolor)
+    lbl.grid(row=i, column=0, sticky=W)
+    lbl = Label(root, text=article['title'], fg="blue", cursor="hand2", font=font, bg=bgcolor)
+    lbl.grid(row=i, column=1, sticky=W)
+    lbl.bind("<Button-1>", lambda e, url=article['link']: callback(url))
+    lbl = Label(root, text="Votes: " + str(article['votes']), font=font, fg=fgcolor, bg=bgcolor)
+    lbl.grid(row=i + 1, column=0)
+    i += 2
 
+lbl.config(bg="black", fg="grey")
 root.mainloop()
